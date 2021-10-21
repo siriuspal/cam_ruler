@@ -42,6 +42,12 @@ void logError(String code, String? message) {
   }
 }
 
+void getStoragePermit() async {
+  if (await Permission.storage.request().isGranted) {
+    // Either the permission was already granted before or the user just granted it.
+  }
+}
+
 class _CameraExampleHomeState extends State<CameraExampleHome>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController? controller;
@@ -70,6 +76,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   @override
   void initState() {
     super.initState();
+    getStoragePermit();
     _ambiguate(WidgetsBinding.instance)?.addObserver(this);
 
     _flashModeControlRowAnimationController = AnimationController(
