@@ -154,16 +154,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
           ),
           _captureControlRowWidget(),
           _modeControlRowWidget(),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                _cameraTogglesRowWidget(),
-                _thumbnailWidget(),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -276,37 +266,8 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
               onPressed: controller != null ? onFlashModeButtonPressed : null,
             ),
             // The exposure and focus mode are currently not supported on the web.
-            ...(!kIsWeb
-                ? [
-                    IconButton(
-                      icon: Icon(Icons.exposure),
-                      color: Colors.blue,
-                      onPressed: controller != null
-                          ? onExposureModeButtonPressed
-                          : null,
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.filter_center_focus),
-                      color: Colors.blue,
-                      onPressed:
-                          controller != null ? onFocusModeButtonPressed : null,
-                    )
-                  ]
-                : []),
-            IconButton(
-              icon: Icon(enableAudio ? Icons.volume_up : Icons.volume_mute),
-              color: Colors.blue,
-              onPressed: controller != null ? onAudioModeButtonPressed : null,
-            ),
-            IconButton(
-              icon: Icon(controller?.value.isCaptureOrientationLocked ?? false
-                  ? Icons.screen_lock_rotation
-                  : Icons.screen_rotation),
-              color: Colors.blue,
-              onPressed: controller != null
-                  ? onCaptureOrientationLockButtonPressed
-                  : null,
-            ),
+            _cameraTogglesRowWidget(),
+            _thumbnailWidget(),
           ],
         ),
         _flashModeControlRowWidget(),
@@ -520,47 +481,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                   !cameraController.value.isRecordingVideo
               ? onTakePictureButtonPressed
               : null,
-        ),
-        IconButton(
-          icon: const Icon(Icons.videocam),
-          color: Colors.blue,
-          onPressed: cameraController != null &&
-                  cameraController.value.isInitialized &&
-                  !cameraController.value.isRecordingVideo
-              ? onVideoRecordButtonPressed
-              : null,
-        ),
-        IconButton(
-          icon: cameraController != null &&
-                  cameraController.value.isRecordingPaused
-              ? Icon(Icons.play_arrow)
-              : Icon(Icons.pause),
-          color: Colors.blue,
-          onPressed: cameraController != null &&
-                  cameraController.value.isInitialized &&
-                  cameraController.value.isRecordingVideo
-              ? (cameraController.value.isRecordingPaused)
-                  ? onResumeButtonPressed
-                  : onPauseButtonPressed
-              : null,
-        ),
-        IconButton(
-          icon: const Icon(Icons.stop),
-          color: Colors.red,
-          onPressed: cameraController != null &&
-                  cameraController.value.isInitialized &&
-                  cameraController.value.isRecordingVideo
-              ? onStopButtonPressed
-              : null,
-        ),
-        IconButton(
-          icon: const Icon(Icons.pause_presentation),
-          color:
-              cameraController != null && cameraController.value.isPreviewPaused
-                  ? Colors.red
-                  : Colors.blue,
-          onPressed:
-              cameraController == null ? null : onPausePreviewButtonPressed,
         ),
       ],
     );
