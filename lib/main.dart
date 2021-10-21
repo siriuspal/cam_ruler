@@ -128,7 +128,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Camera example'),
+        title: const Text('Cam Ruler'),
       ),
       body: Column(
         children: <Widget>[
@@ -137,7 +137,18 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
               child: Padding(
                 padding: const EdgeInsets.all(1.0),
                 child: Center(
-                  child: _cameraPreviewWidget(),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    alignment: AlignmentDirectional.center,
+                    children: <Widget>[
+                      _cameraPreviewWidget(),
+                      InteractiveViewer(
+                        panEnabled: true,
+                        scaleEnabled: true,
+                        child: Image.asset('assets/images/ruler.png'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               decoration: BoxDecoration(
