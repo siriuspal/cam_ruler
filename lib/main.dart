@@ -7,6 +7,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
@@ -14,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:screenshot/screenshot.dart';
+import 'package:flutter/rendering.dart';
 
 class CameraExampleHome extends StatefulWidget {
   @override
@@ -72,7 +73,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   double _maxAvailableZoom = 1.0;
   double _currentScale = 1.0;
   double _baseScale = 1.0;
-  ScreenshotController screenshotController = ScreenshotController();
+  final GlobalKey _key = GlobalKey();
 
   // Counting pointers (number of user fingers on screen)
   int _pointers = 0;
@@ -149,8 +150,8 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
               child: Padding(
                 padding: const EdgeInsets.all(1.0),
                 child: Center(
-                  child: Screenshot(
-                    controller: screenshotController,
+                  child: RepaintBoundary(
+                    key: _key,
                     child: Stack(
                       fit: StackFit.expand,
                       clipBehavior: Clip.none,
@@ -626,13 +627,16 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   }
 
   Future<void> getScreenshot() async {
-    Uint8List? image = await screenshotController.capture();
+    RenderRepaintBoundary boundary =
+        _key.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
-    if (image != null) {
-      Uint8List _image = image;
-      await ImageGallerySaver.saveImage(_image,
-          quality: 100,
-          name: DateTime.now().microsecondsSinceEpoch.toString() + '.jpg');
+    ui.Image image = await boundary.toImage();
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
+    if (byteData != null) {
+      Uint8List pngBytes = byteData.buffer.asUint8List();
+      await ImageGallerySaver.saveImage(Uint8List.fromList(pngBytes),
+          quality: 100, name: DateTime.now().toString() + '.png');
     }
   }
 
