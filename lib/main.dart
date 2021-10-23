@@ -6,12 +6,15 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:screenshot/screenshot.dart';
 
 class CameraExampleHome extends StatefulWidget {
   @override
@@ -69,6 +72,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   double _maxAvailableZoom = 1.0;
   double _currentScale = 1.0;
   double _baseScale = 1.0;
+  ScreenshotController screenshotController = ScreenshotController();
 
   // Counting pointers (number of user fingers on screen)
   int _pointers = 0;
@@ -145,17 +149,22 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
               child: Padding(
                 padding: const EdgeInsets.all(1.0),
                 child: Center(
-                  child: Stack(
-                    fit: StackFit.expand,
-                    alignment: AlignmentDirectional.center,
-                    children: <Widget>[
-                      _cameraPreviewWidget(),
-                      InteractiveViewer(
-                        panEnabled: true,
-                        scaleEnabled: true,
-                        child: Image.asset('assets/images/ruler.png'),
-                      ),
-                    ],
+                  child: Screenshot(
+                    controller: screenshotController,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      clipBehavior: Clip.none,
+                      alignment: AlignmentDirectional.center,
+                      children: <Widget>[
+                        _cameraPreviewWidget(),
+                        InteractiveViewer(
+                          clipBehavior: Clip.none,
+                          panEnabled: true,
+                          scaleEnabled: true,
+                          child: Image.asset('assets/images/ruler.png'),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -286,7 +295,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
             ),
             // The exposure and focus mode are currently not supported on the web.
             _cameraTogglesRowWidget(),
-            _thumbnailWidget(),
+            //_thumbnailWidget(),
           ],
         ),
         _flashModeControlRowWidget(),
@@ -616,15 +625,27 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
     }
   }
 
-  void onTakePictureButtonPressed() {
-    takePicture().then((XFile? file) {
+  Future<void> getScreenshot() async {
+    Uint8List? image = await screenshotController.capture();
+
+    if (image != null) {
+      Uint8List _image = image;
+      await ImageGallerySaver.saveImage(_image,
+          quality: 100,
+          name: DateTime.now().microsecondsSinceEpoch.toString() + '.jpg');
+    }
+  }
+
+  void onTakePictureButtonPressed() async {
+    await getScreenshot();
+    takePicture().then((XFile? file) async {
       if (mounted) {
         setState(() {
           imageFile = file;
           videoController?.dispose();
           videoController = null;
         });
-        if (file != null) showInSnackBar('Picture saved to ${file.path}');
+        if (file != null) await ImageGallerySaver.saveFile(file.path);
       }
     });
   }
