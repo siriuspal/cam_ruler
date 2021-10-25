@@ -37,6 +37,7 @@ dependencies:
   video_player: ^2.2.5
   permission_handler: ^7.2.0
   image_gallery_saver: ^1.7.1
+  flutter_login_template: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:

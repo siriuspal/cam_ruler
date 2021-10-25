@@ -16,6 +16,7 @@ import 'package:video_player/video_player.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_login_template/flutter_login_template.dart';
 
 class CameraExampleHome extends StatefulWidget {
   @override
@@ -52,6 +53,14 @@ void getStoragePermit() async {
   }
 }
 
+enum _State {
+  signIn,
+  signUp,
+  forgot,
+  create,
+  normalop,
+}
+
 class _CameraExampleHomeState extends State<CameraExampleHome>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   CameraController? controller;
@@ -78,8 +87,12 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   // Counting pointers (number of user fingers on screen)
   int _pointers = 0;
 
+  late LoginTemplateStyle style;
+  _State state = _State.signIn;
+
   @override
   void initState() {
+    style = LoginTemplateStyle.defaultTemplate;
     super.initState();
     getStoragePermit();
     _ambiguate(WidgetsBinding.instance)?.addObserver(this);
@@ -138,53 +151,143 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
 
   @override
   Widget build(BuildContext context) {
+    var logo = const Icon(
+      Icons.android_rounded,
+      size: 80,
+    );
+
+    var signInPage = LoginTemplateSignInPage(
+      logo: logo,
+      style: style,
+      onPressedSignIn: () {
+        setState(() {
+          state = _State.normalop;
+        });
+      },
+      onPressedSignUp: () {
+        setState(() {
+          state = _State.signUp;
+        });
+      },
+      onPressedForgot: () {
+        setState(() {
+          state = _State.forgot;
+        });
+      },
+      term: LoginTemplateTerm(
+        style: style,
+        onPressedTermOfService: () {},
+        onPressedPrivacyPolicy: () {},
+      ),
+    );
+
+    var signUpPage = LoginTemplateSignUpPage(
+      logo: logo,
+      style: style,
+      onPressedSignIn: () {
+        setState(() {
+          state = _State.signIn;
+        });
+      },
+      onPressedSignUp: () {
+        setState(() {
+          state = _State.create;
+        });
+      },
+      term: LoginTemplateTerm(
+        style: style,
+        onPressedTermOfService: () {},
+        onPressedPrivacyPolicy: () {},
+      ),
+    );
+
+    var forgotPasswordPage = LoginTemplateForgotPasswordPage(
+        logo: logo,
+        style: style,
+        onPressedNext: () {
+          setState(() {
+            state = _State.create;
+          });
+        });
+
+    var createPassword = LoginTemplateCreatePasswordPage(
+      logo: logo,
+      style: style,
+      onPressedNext: () {
+        setState(() {
+          state = _State.signIn;
+        });
+      },
+    );
+
+    var normalOp = Column(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Center(
+                child: RepaintBoundary(
+                  key: _key,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    clipBehavior: Clip.none,
+                    alignment: AlignmentDirectional.center,
+                    children: <Widget>[
+                      _cameraPreviewWidget(),
+                      InteractiveViewer(
+                        clipBehavior: Clip.none,
+                        panEnabled: true,
+                        scaleEnabled: true,
+                        child: Image.asset('assets/images/ruler.png'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              border: Border.all(
+                color: controller != null && controller!.value.isRecordingVideo
+                    ? Colors.redAccent
+                    : Colors.grey,
+                width: 3.0,
+              ),
+            ),
+          ),
+        ),
+        _captureControlRowWidget(),
+        _modeControlRowWidget(),
+      ],
+    );
+
+    Widget body;
+    switch (state) {
+      case _State.signUp:
+        body = signUpPage;
+        break;
+      case _State.forgot:
+        body = forgotPasswordPage;
+        break;
+      case _State.create:
+        body = createPassword;
+        break;
+      case _State.normalop:
+        body = normalOp;
+        break;
+      case _State.signIn:
+      default:
+        body = signInPage;
+        break;
+    }
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Cam Ruler'),
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Center(
-                  child: RepaintBoundary(
-                    key: _key,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      clipBehavior: Clip.none,
-                      alignment: AlignmentDirectional.center,
-                      children: <Widget>[
-                        _cameraPreviewWidget(),
-                        InteractiveViewer(
-                          clipBehavior: Clip.none,
-                          panEnabled: true,
-                          scaleEnabled: true,
-                          child: Image.asset('assets/images/ruler.png'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                border: Border.all(
-                  color:
-                      controller != null && controller!.value.isRecordingVideo
-                          ? Colors.redAccent
-                          : Colors.grey,
-                  width: 3.0,
-                ),
-              ),
-            ),
-          ),
-          _captureControlRowWidget(),
-          _modeControlRowWidget(),
-        ],
-      ),
+      body: body,
     );
   }
 
