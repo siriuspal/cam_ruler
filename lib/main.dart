@@ -60,6 +60,7 @@ enum _State {
   create,
   selectmode,
   camview,
+  infomenuview,
 }
 
 class _CameraExampleHomeState extends State<CameraExampleHome>
@@ -288,7 +289,11 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
             ),
             const SizedBox(width: 30.0),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  state = _State.infomenuview;
+                });
+              },
               child: const Text('WD 측정'),
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.fromLTRB(28, 42, 28, 42),
@@ -296,6 +301,176 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                 backgroundColor: Colors.orange,
                 textStyle: const TextStyle(fontSize: 20),
               ),
+            ),
+          ],
+        ),
+      ],
+    );
+
+    var infomenu = Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: const [
+            SizedBox(
+              width: 30,
+            ),
+            Text(
+              'WD 측정',
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 40,
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            SizedBox(
+              width: 50,
+            ),
+            Text(
+              '1.\t ',
+              maxLines: 1,
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 20,
+                height: 1.4,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                '실제로 업무를 보실 때의 자세를 취한다.',
+                maxLines: 2,
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 50,
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            SizedBox(
+              width: 50,
+            ),
+            Text(
+              '2.\t ',
+              maxLines: 5,
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 20,
+                height: 1.4,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                '눈에서 루페를 통해 보았을 때 실제로 보여야하는 환부까지의 거리를 측정한다',
+                maxLines: 5,
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 50,
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            SizedBox(
+              width: 50,
+            ),
+            Text(
+              '3.\t ',
+              maxLines: 5,
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 20,
+                height: 1.4,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                '측정 값을 기입한다.',
+                maxLines: 5,
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 50,
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 100,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  state = _State.infomenuview;
+                });
+              },
+              child: const Text('측정 값을 입력하시오.'),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                primary: Colors.white,
+                backgroundColor: Colors.green,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 100,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  state = _State.selectmode;
+                });
+              },
+              child: const Text('Back'),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                primary: Colors.white,
+                backgroundColor: Colors.blue,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+            ),
+            const SizedBox(
+              width: 50,
             ),
           ],
         ),
@@ -318,6 +493,9 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
         break;
       case _State.selectmode:
         body = selecviewmenu;
+        break;
+      case _State.infomenuview:
+        body = infomenu;
         break;
       case _State.signIn:
       default:
