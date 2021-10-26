@@ -58,7 +58,8 @@ enum _State {
   signUp,
   forgot,
   create,
-  normalop,
+  selectmode,
+  camview,
 }
 
 class _CameraExampleHomeState extends State<CameraExampleHome>
@@ -161,7 +162,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
       style: style,
       onPressedSignIn: () {
         setState(() {
-          state = _State.normalop;
+          state = _State.selectmode;
         });
       },
       onPressedSignUp: () {
@@ -220,7 +221,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
       },
     );
 
-    var normalOp = Column(
+    var camview = Column(
       children: <Widget>[
         Expanded(
           child: Container(
@@ -262,6 +263,45 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
       ],
     );
 
+    var selecviewmenu = Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image.asset('assets/images/banner.jpg'),
+        const SizedBox(height: 150.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  state = _State.camview;
+                });
+              },
+              child: const Text('PD 측정'),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.fromLTRB(28, 42, 28, 42),
+                primary: Colors.white,
+                backgroundColor: Colors.blue,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+            ),
+            const SizedBox(width: 30.0),
+            TextButton(
+              onPressed: () {},
+              child: const Text('WD 측정'),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.fromLTRB(28, 42, 28, 42),
+                primary: Colors.white,
+                backgroundColor: Colors.orange,
+                textStyle: const TextStyle(fontSize: 20),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+
     Widget body;
     switch (state) {
       case _State.signUp:
@@ -273,8 +313,11 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
       case _State.create:
         body = createPassword;
         break;
-      case _State.normalop:
-        body = normalOp;
+      case _State.camview:
+        body = camview;
+        break;
+      case _State.selectmode:
+        body = selecviewmenu;
         break;
       case _State.signIn:
       default:
