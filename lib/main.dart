@@ -85,6 +85,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   double _currentScale = 1.0;
   double _baseScale = 1.0;
   final GlobalKey _key = GlobalKey();
+  String? rulerImage;
 
   // Counting pointers (number of user fingers on screen)
   int _pointers = 0;
@@ -222,6 +223,14 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
       },
     );
 
+    String changeRuler() {
+      if (rulerImage == 'assets/images/ruler_short.png') {
+        return 'assets/images/ruler_long.png';
+      } else {
+        return 'assets/images/ruler_short.png';
+      }
+    }
+
     var camview = Column(
       children: <Widget>[
         Expanded(
@@ -241,7 +250,8 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                         clipBehavior: Clip.none,
                         panEnabled: true,
                         scaleEnabled: true,
-                        child: Image.asset('assets/images/ruler.png'),
+                        child: Image.asset(
+                            rulerImage ?? 'assets/images/ruler_short.png'),
                       ),
                     ],
                   ),
@@ -274,6 +284,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton(
+              key: const ObjectKey(TextButton),
               onPressed: () {
                 setState(() {
                   state = _State.camview;
@@ -507,6 +518,24 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
       key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Cam Ruler'),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              setState(() {
+                rulerImage = changeRuler();
+              });
+            },
+            icon: const Icon(Icons.space_bar),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                state = _State.selectmode;
+              });
+            },
+            icon: const Icon(Icons.home),
+          ),
+        ],
       ),
       body: body,
     );
