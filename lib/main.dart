@@ -85,7 +85,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   double _currentScale = 1.0;
   double _baseScale = 1.0;
   final GlobalKey _key = GlobalKey();
-  String? rulerImage;
+  String? rulerImage = 'assets/images/ruler_short.png';
 
   // Counting pointers (number of user fingers on screen)
   int _pointers = 0;
@@ -154,10 +154,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
 
   @override
   Widget build(BuildContext context) {
-    var logo = const Icon(
-      Icons.android_rounded,
-      size: 80,
-    );
+    var logo = Image.asset('assets/images/banner.jpg');
 
     var signInPage = LoginTemplateSignInPage(
       logo: logo,
@@ -340,7 +337,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
           ],
         ),
         const SizedBox(
-          height: 40,
+          height: 10,
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -439,7 +436,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
           ],
         ),
         const SizedBox(
-          height: 100,
+          height: 20,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -461,10 +458,38 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
           ],
         ),
         const SizedBox(
-          height: 100,
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 300,
+              child: Image.asset(
+                'assets/images/example.png',
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              '<예시>',
+              maxLines: 5,
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             TextButton(
               onPressed: () {
@@ -668,7 +693,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
           mainAxisSize: MainAxisSize.max,
           children: [
             IconButton(
-              icon: Icon(Icons.flash_off),
+              icon: const Icon(Icons.flash_off),
               color: controller?.value.flashMode == FlashMode.off
                   ? Colors.orange
                   : Colors.blue,
@@ -677,7 +702,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                   : null,
             ),
             IconButton(
-              icon: Icon(Icons.flash_auto),
+              icon: const Icon(Icons.flash_auto),
               color: controller?.value.flashMode == FlashMode.auto
                   ? Colors.orange
                   : Colors.blue,
@@ -686,7 +711,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                   : null,
             ),
             IconButton(
-              icon: Icon(Icons.flash_on),
+              icon: const Icon(Icons.flash_on),
               color: controller?.value.flashMode == FlashMode.always
                   ? Colors.orange
                   : Colors.blue,
@@ -695,7 +720,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                   : null,
             ),
             IconButton(
-              icon: Icon(Icons.highlight),
+              icon: const Icon(Icons.highlight),
               color: controller?.value.flashMode == FlashMode.torch
                   ? Colors.orange
                   : Colors.blue,
@@ -728,7 +753,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
           color: Colors.grey.shade50,
           child: Column(
             children: [
-              Center(
+              const Center(
                 child: Text("Exposure Mode"),
               ),
               Row(
@@ -736,7 +761,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   TextButton(
-                    child: Text('AUTO'),
+                    child: const Text('AUTO'),
                     style: styleAuto,
                     onPressed: controller != null
                         ? () =>
@@ -750,7 +775,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
                     },
                   ),
                   TextButton(
-                    child: Text('LOCKED'),
+                    child: const Text('LOCKED'),
                     style: styleLocked,
                     onPressed: controller != null
                         ? () =>
